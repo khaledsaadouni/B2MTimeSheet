@@ -1,0 +1,319 @@
+<!--main-->
+
+<div class="card">
+  <div [ngClass]="{'bluring': blure}">
+    <div style="padding-top: 20px;padding-left: 20px;padding-right: 20px;  height: 100%    ">
+      <section class="task-panel tasks-widget">
+        <div class="panel-heading" style="padding-bottom: 40px">
+          <div class="pull-left ">
+            <h1>Projects</h1>
+          </div>
+          <div class="pull-right row">
+            <div class="col" style="padding-top: 3px">
+              <button class="btn btn-outline-dark btn-sm pull-left" (click)="openPopup()">Add New Project</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div (cdkDropListDropped)="drop($event)" cdkDropList class="">
+            <div *ngFor="let p of projects; index as i" [ngClass]="[random()]" cdkDrag class="example-box ">
+              <div class="row">
+                <div class="col-sm-1"  style="width:5px;height: 100%"  >
+                  <span [ngClass]="p.state" >  &nbsp;</span>
+
+                </div>
+                <div class=" col task-title" style="font-size: large;text-align: left">
+                  <a class="btn btn-sm  " style="border: none" (click)="click[i]=!click[i]">
+                    <i *ngIf="!click[i]" class="fa fa-angle-down" aria-hidden="true"></i>
+                    <i *ngIf="click[i]" class="fa fa-angle-up" aria-hidden="true"></i></a>
+                  <span class="task-title-sp ">{{p.name}} <span class="badge " [ngClass]="p.state">{{p.state}}</span><span style="font-size: small;color: grey;padding-left: 10px" *ngIf="p.deadline">DL: {{p.deadline|Dating }} </span></span>
+                  <div class="pull-right hidden-phone">
+                    <button (click)="openPopup4(p,i)" class="btn btn-outline-dark btn-xsbi bi bi-plus"
+                            style=" margin-left: 10px;margin-right: 10px;border: none "></button>
+                    <button (click)="openPopup2(p)" class="btn btn-outline-dark btn-xs bi bi-pencil"
+                            style=" margin-left: 10px;margin-right: 10px;border: none"></button>
+                    <button (click)="openPopup3(p)" class="btn btn-outline-danger btn-xs bi bi-trash"
+                            style=" margin-left: 10px;margin-right: 10px;border: none"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div *ngIf="click[i]">
+                  <div class="example-box" *ngFor="let t of p.tasks;index as w"> {{t.task}}
+
+                    <div class="pull-right hidden-phone">
+                      <button (click)="openPopup5(p,w)" class="btn btn-outline-dark btn-xsbi bi bi-pencil"
+                              style=" margin-left: 10px;margin-right: 10px;border: none "></button>
+                      <button (click)="openPopup3(p,t)" class="btn btn-outline-danger btn-xs bi bi-trash"
+                              style=" margin-left: 10px;margin-right: 10px;border: none"></button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+
+</div>
+<!--end main-->
+
+
+<!--new project model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1><i class="fa fa-file-o" aria-hidden="false"></i>
+              New project </h1></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Project Name:</div>
+          <div class="col"><input type="text" class="form-control" #name style="height: 30px"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Deadline:</div>
+          <div class="col"><input type="date" class="form-control" #date style="height: 30px"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Status:</div>
+          <div class="col"><select #satut class="form-select ">
+            <option value="Pending">Pending</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Done">Done</option>
+            <option value="Canceled">Canceled</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="row" style="padding-top: 20px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save(name.value,date.value,satut.value)"><i
+              class="fa fa-check"
+              aria-hidden="true"></i> Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end new project model-->
+
+<!--edit model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle2}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1><i class="fa fa-file-o" aria-hidden="false"></i>
+              New project </h1></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Project Name:</div>
+          <div class="col"><input type="text" class="form-control" #name12 style="height: 30px" [ngModel]="selected.name">
+          </div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Deadline:</div>
+          <div class="col"><input type="date" class="form-control" #date12 style="height: 30px"
+                                  [ngModel]="selected.deadlinedate"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Status:</div>
+          <div class="col"><select #satut12 class="form-select " [ngModel]="selected.state">
+            <option value="Pending">Pending</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Done">Done</option>
+            <option value="Canceled">Canceled</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="row" style="padding-top: 20px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save2(name12.value,date12.value,satut12.value)"><i
+              class="fa fa-check"
+              aria-hidden="true"></i> Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup2()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end edit model-->
+
+
+<!--confirm model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle3}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1>Confirm delete? </h1></div>
+        </div>
+
+
+        <div class="row" style="padding-top: 20px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save3()"><i class="fa fa-check" aria-hidden="true"></i>
+              Confirm
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger" (click)="closePopup3()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end confirm model-->
+
+
+<!--new task model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle4}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1><i class="bi bi-list-stars"></i>
+              New Task </h1></div>
+        </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px">
+          <div class="col">Task Name:</div>
+          <div class="col"><input type="text" class="form-control" #task style="height: 30px"></div>
+        </div>
+
+        <div class="row" style="padding-top: 10px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save4(task.value)"><i class="fa fa-check"
+                                                                                aria-hidden="true"></i>Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup4()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end new task model-->
+
+
+<!--edit task model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle5}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1><i class="bi bi-list-stars"></i>
+              New Task </h1></div>
+        </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px">
+          <div class="col">Task Name:</div>
+          <div class="col"><input type="text" class="form-control"  #task1234 style="height: 30px"></div>
+        </div>
+
+        <div class="row" style="padding-top: 10px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save5(task1234.value)"><i class="fa fa-check"
+                                                                                aria-hidden="true"></i>Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup5()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end edit task model-->
+
+
+

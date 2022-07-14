@@ -1,0 +1,58 @@
+
+<div class="container">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong"
+             style="border-radius: 0.5rem;box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5);">
+          <div class="card-body p-5  " style=" ">
+
+            <div class="text-center">
+
+              <img src="assets/img/b2mr.png" >
+              <h1 class="mt-1 mb-5 pb-1" style="color: #ec8404;font-size: x-large">Log In </h1>
+            </div>
+
+            <form #login='ngForm'>
+              <div class="container123">
+                <div class="form-outline mb-4 ">
+                  <div class="fontuser">
+                    <label for="email" style="font-size: large">Email: </label>
+
+                    <input id="email" email required type="email" #email='ngModel'  name="email"
+                           ngModel placeholder="Username">
+                    <i class="fa fa-user fa-lg fontuseri" ></i>
+                    <i *ngIf="email.invalid && email.touched"  class="fa fa-exclamation-triangle fa-lg atten " aria-hidden="true"></i>
+                  </div>
+                  <div style="color: red" *ngIf="email.invalid && email.touched" >Invalid Email!</div>
+
+                </div>
+
+                <div class="">
+                  <div class="fontpassword">
+                    <label for="pwd"  style="font-size: large"> Password: </label>
+
+                    <input id="pwd" minlength="5" #pass='ngModel' required placeholder="Password" type="password"
+                           name="pwd" ngModel><i class="fa fa-lock fa-lg fontuseri" aria-hidden="true"></i>
+                    <i *ngIf="pass.invalid && pass.touched"  class="fa fa-exclamation-triangle fa-lg atten " aria-hidden="true"></i>
+
+                  </div>                  <div style="color: red" *ngIf="pass.invalid && pass.touched">Password must contain at least 5 characters</div>
+
+                </div>
+
+                <div class="form-outline mb-4">
+                  <button [disabled]="login.invalid" (click)="log(login)" class="btn btn-dark  ">
+                    login
+                  </button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,180 @@
+<div [ngClass]="{'bluring': blure}" style="height: 100%">
+  <div style=" padding-top: 30px;background: #f5f5f5">
+
+
+    <div class="row" style="margin-left:100px; margin-right: 100px;padding-bottom: 25px;padding-top:20px">
+
+      <div class="col-md-5">     <h1 style="text-align: right;color: #394851;text-shadow:  2px  2px lightgrey">Time Sheet Of  </h1>
+      </div>
+      <div class="col-md-6 ">
+
+        <input #innn type="month" class="form-control" (change)="alert(innn.value)" [ngModel]="inputdate">
+
+    </div>
+    </div>
+    <div class=" container">
+
+
+      <table class="table table-bordered "
+             style="text-align: center; background: white ; box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5);">
+        <thead>
+
+
+        <tr>
+          <td>
+          </td>
+          <td>Total</td>
+          <td *ngFor="let a of [].constructor(days);index as i">{{i + 1}} </td>
+
+        </tr>
+        </thead>
+        <tbody style="border: lightgrey" *ngFor="let p of projects;index as x">
+        <tr class="col" [ngClass]="p.state ">
+
+          <td style="color: whitesmoke;font-size: large">
+            {{p.name}}
+          </td>
+          <td *ngFor="let a of [].constructor(days+1);index as i">  </td>
+
+
+        <tr *ngFor="let t of p.tasks">
+          <td style="color: black">{{t.task}}</td>
+
+          <td style="color: black"  *ngFor="let a of t.getDone(Cmonth,Cyear);index as u" (click)="openPopup3(t,u)"> {{a}}</td>
+
+
+        </tr>
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-top: 10%;"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <i class="fa fa-file-o" aria-hidden="false"></i>
+            Project Name
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" #name>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save(name.value)"><i class="fa fa-check"
+                                                                               aria-hidden="true"></i> Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+  style="padding-top: 10%;"
+  [ngStyle]="{'display':displayStyle2}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <i class="fa fa-tasks fa-lg" aria-hidden="true"></i> Task Name
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" [ngModel]="" #task>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save2(task.value)"><i class="fa fa-check"
+                                                                                aria-hidden="true"></i>Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup2()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="pop"
+  style="padding-bottom: 300px;"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle3}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i> Hours on {{localday}}/{{Cmonth }}:
+          </div>
+          <div class="col">
+            <div class="col"><select class="form-select " (ngModelChange)="setCoef($event)" [ngModel]="Cyear">
+              <option value="0.25">0.25</option>
+              <option value="0.5">0.5</option>
+              <option value="0.75">0.75</option>
+              <option value="1">1</option>
+            </select>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save3()"><i class="fa fa-check"
+                                                                      aria-hidden="true"></i>Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup3()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

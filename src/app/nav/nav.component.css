@@ -1,0 +1,30 @@
+.act {
+  font-size: larger;
+  display: block;
+  cursor: pointer;
+  color: black;
+  padding: 10px;
+  line-height: 30px;
+  border-bottom: none;
+  background: linear-gradient(to right, #ec8404 , #f3a74e);
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+
+
+.sidea {
+  display: block;
+  cursor: pointer;
+  color: #f0f0f0;
+  padding: 10px;
+  line-height: 30px;
+  border-bottom: none;
+
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}

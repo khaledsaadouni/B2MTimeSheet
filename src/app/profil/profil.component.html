@@ -1,0 +1,129 @@
+<div [ngClass]="{'bluring': blure}">
+<div class="card">
+  <div class="card-body">
+    <div class="user-profile">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="user-photo m-b-30">
+            <img class="img-fluid rounded-circle  pull-right" [src]="'assets/img/avatar.jfif'" style="object-fit: cover;height: 200px;width: 200px" alt="">
+
+          </div>
+          <div>
+
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="user-profile-name" > <h1 style="font-size: x-large">  <i class="bi bi-person"></i>{{user.name|titlecase}} {{user.firstname|titlecase}}</h1> </div>
+          <div class="user-job-title"><h2 style="color: #ec8404">{{user.job}}</h2>
+          </div>
+
+          <div class="custom-tab user-profile-tab">
+
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="1">
+                <div class="contact-information">
+
+                  <div class="birthday-content">
+                    <span class="contact-title">Birthday:</span>
+                    <span class="birth-date">{{user.birthday|Dating}} </span>
+                  </div>
+                  <div class="email-content">
+                    <span class="contact-title">Email:</span>
+                    <span class="contact-email">{{user.email}}</span>
+                  </div>
+                  <div class="phone-content">
+                    <span class="contact-title">Phone:</span>
+                    <span class="phone-number">{{user.number}}</span>
+                  </div>
+                  <div class="skype-content">
+                    <span class="contact-title">Skype:</span>
+                    <span class="contact-skype">{{user.skype}}</span>
+                  </div>
+                  <div class="skype-content">
+                    <button class="btn btn-secondary" (click)="openPopup()">  Edit Profile </button>                 </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--edit profile modal-->
+<div
+
+
+  class="pop "
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom:100px"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1>
+             Edit Profile </h1></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Name:</div>
+          <div class="col"><input  type="text" class="form-control" #name style="height: 30px" [ngModel]="user.name"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+        <div class="col"> FirstName:</div>
+          <div class="col"><input   type="text" class="form-control" #fn style="height: 30px" [ngModel]="user.firstname"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Job:</div>
+          <div class="col"><input  type="text" class="form-control" #job style="height: 30px" [ngModel]="user.job"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+      <div class="col"> Email:</div>
+          <div class="col"><input  type="text" class="form-control" #email style="height: 30px" [ngModel]="user.email"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Phone Number:</div>
+          <div class="col"><input type="number" class="form-control" #num style="height: 30px" [ngModel]="user.number"></div>
+        </div>
+
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Birthday:</div>
+          <div class="col">
+            <input type="date" class="form-control" #bday style="height: 30px" [ngModel]="bd"></div>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Skype:</div>
+          <div class="col"><input   type="text" class="form-control" #sk style="height: 30px" [ngModel]="user.skype"></div>
+        </div>
+
+
+        <div class="row" style="padding-top: 20px;">
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button class="btn btn-outline-dark" (click)="save(name.value,fn.value,job.value,email.value,num.value,bday.value,sk.value)"><i
+              class="fa fa-check"
+              aria-hidden="true"></i> Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end modal-->

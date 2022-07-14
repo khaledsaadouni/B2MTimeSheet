@@ -1,0 +1,230 @@
+
+
+
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-8 p-r-0 title-margin-right">
+          <div class="page-header">
+            <div class="page-title">
+              <h1 > <span style="font-size: x-large">Welcome To Your B2M Dashboard</span></h1>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /# row -->
+      <section id="main-content">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="card">
+              <div class="stat-widget-one">
+                <div class="stat-icon dib"><i class="bi bi-files color-info"></i>
+                </div>
+                <div class="stat-content dib">
+                  <div class="stat-text">Total Projects</div>
+                  <div class="stat-digit">{{projects.length}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <div class="stat-widget-one">
+                <div class="stat-icon dib" style="font-size: small"><i class=" color-success bi bi-card-checklist"></i>
+                </div>
+                <div class="stat-content dib">
+                  <div class="stat-text">Total Tasks</div>
+                  <div class="stat-digit">{{getNumberTask()}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <div class="stat-widget-one">
+                <div class="stat-icon dib"><i class="bi bi-person color-pink  "></i>
+                </div>
+                <div class="stat-content dib">
+                  <div class="stat-text">Co-Workers</div>
+                  <div class="stat-digit">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="card">
+              <div class="stat-widget-one">
+                <div class="stat-icon dib"><i class="bi bi-clock color-danger "></i></div>
+                <div class="stat-content dib">
+                  <div class="stat-text">Hours Spent</div>
+                  <div class="stat-digit">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+
+
+          <!-- /# column -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-title">
+                <h4>Tasks</h4>
+
+              </div>
+              <div class="todo-list">
+                <div class="tdl-holder">
+                  <div class="tdl-content">
+                    <ul  (cdkDropListDropped)="drop($event)"  cdkDropList >
+                      <li *ngFor="let t of tasks;index as i" cdkDrag class="example-box ">
+                        <label>
+                          <input type="checkbox" (click)="delete(i)"><i></i><span style="color: black">{{t.task|titlecase}}</span>
+
+                        </label>
+                      </li >
+
+                    </ul>
+                  </div>
+                  <input #task type="text" class="tdl-new form-control" (keyup.enter)="addtask(task.value)"
+                         placeholder="Write new item and hit 'Enter'...">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /# column -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-title">
+                <h4>Projects Timeline</h4>
+
+
+              </div>
+              <div class="card-body">
+                <ul class="timeline">
+                  <li *ngFor="let p of projects">
+                    <div class="tbadge "  [ngClass]="p.state">
+                      <i *ngIf="p.state=='Pending'" class="bi bi-clock"></i>
+                      <i *ngIf="p.state=='Ongoing'" class="bi bi-code-slash"></i>
+                      <i *ngIf="p.state=='Done'" class="bi bi-check2-circle"></i>
+                      <i *ngIf="p.state=='Canceled'" class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h5 class="timeline-title">{{p.name|titlecase}}</h5>
+                      </div>
+                      <div class="timeline-body">
+                        <p>Added On: {{p.date|Dating}}</p>
+                      </div>
+                    </div>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+            <!-- /# card -->
+          </div>
+        </div>
+        <!-- /# row -->
+
+        <div class="row">
+
+          <div class="col ">
+            <div class="card">
+              <div class="card-title pr">
+                <h4>Clients</h4>
+
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table student-data-table m-t-20">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th>Email</th>
+                      <th>Phone Number</th>
+                      <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>#2901</td>
+
+                      <td>
+                        <span class="badge badge-primary">Paid</span>
+                      </td>
+                      <td>
+                        edumin@gmail.com
+                      </td>
+
+                      <td>
+                      12345678
+                      </td>
+                      <td>
+                      10/05/2017
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#2901</td>
+
+                      <td>
+                        <span class="badge badge-warning">Pending</span>
+                      </td>
+                      <td>
+                        edumin@gmail.com
+                      </td>
+                      <td>
+                        12345678
+                      </td>
+                      <td>
+                        10/05/2017
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#2901</td>
+
+                      <td>
+                        <span class="badge badge-primary">Paid</span>
+                      </td>
+                      <td>
+                        edumin@gmail.com
+                      </td>
+                      <td>
+                        12345678
+                      </td>
+                      <td>
+                        10/05/2017
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#2901</td>
+
+                      <td>
+                        <span class="badge badge-danger">Due</span>
+                      </td>
+                      <td>
+                        edumin@gmail.com
+                      </td>
+                      <td>
+                        12345678
+                      </td>
+                      <td>
+                        10/05/2017
+                      </td>
+                    </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /# column -->
+        </div>
+
+
+
+      </section>
+    </div>
