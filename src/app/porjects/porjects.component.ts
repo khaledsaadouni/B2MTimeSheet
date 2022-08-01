@@ -1,9 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {ProjectsService} from "../projects.service";
-import {Project} from "../model/project";
 import {moveItemInArray} from "@angular/cdk/drag-drop";
-import {task} from "../model/task";
+
 import {LoginService} from "../login.service";
+import {ProjService} from "../api/projects.service";
+
+import {Router} from "@angular/router";
+import {Projectapi} from "../model/projectapi";
+import {TaskService} from "../api/task.service";
+import {Taskapi} from "../model/taskapi";
+import {ClientService} from "../api/client.service";
+import {AuthService} from "../api/auth.service";
 
 @Component({
   selector: 'app-porjects',
@@ -11,42 +18,59 @@ import {LoginService} from "../login.service";
   styleUrls: ['./porjects.component.css']
 })
 export class PorjectsComponent implements OnInit {
-
+  SProj;
+  STask;
   selected;
-  selectedTask;
-  selectedProject;
+  selectedProjectId;
   selectedindex;
-
+  clients;
   click = [];
-  randclass = ["list-danger", "list-success", "list-warning", "list-info"];
+  cuser;
+  list;
+  projects;
+  devs;
 
-  constructor(private projectser: ProjectsService,private logged: LoginService) {
+  constructor(private authservice: AuthService, private clientapi: ClientService, private router: Router, private projectser: ProjectsService, private logged: LoginService, private ProjectApi: ProjService, private tasksapi: TaskService) {
   }
 
-  projects;
 
   ngOnInit(): void {
+    this.authservice.getLoggedUser(sessionStorage.getItem('id')).subscribe((res) => {
+      this.cuser = res
+    })
+    this.authservice.getdevs().subscribe((r) => {
+      this.devs = r
+    })
+    this.clientapi.GetClients().subscribe((res) => {
+      this.clients = res
+    })
+    this.STask = new Taskapi('', '')
+    this.SProj = new Projectapi('n', 'n', '', '')
     this.logged.loggin();
-    this.projects = this.projectser.projects;
+    this.projects = this.projectser.addtasks();
+    this.ProjectApi.getProjects().subscribe((res) => {
+      this.list = res
+    })
     for (let i = 0; i < this.projects.length; i++) {
       this.click.push(false)
     }
-    this.selected = new Project('non', 2022000);
+
 
   }
 
-  random(): String {
-    return this.randclass[Math.floor(Math.random() * this.randclass.length)];
-  }
 
   drop(event) {
-    moveItemInArray(this.projectser.projects, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.list, event.previousIndex, event.currentIndex);
     moveItemInArray(this.click, event.previousIndex, event.currentIndex);
   }
-  padTo2Digits(num): any {
-    return num.toString().padStart(2, '0');
+
+  drop1(event) {
+    moveItemInArray(this.cuser.tasks, event.previousIndex, event.currentIndex);
   }
 
+  dl= new Date("1899-11-30")
+
+//model1
   blure = false;
   displayStyle = "none";
 
@@ -56,18 +80,13 @@ export class PorjectsComponent implements OnInit {
 
   }
 
+  save(n, d, s, c) {
+    let p = new Projectapi(n, s, d, c);
+    this.ProjectApi.addProject(p, c).subscribe((res) => {
 
-  save(n, d, s) {
-
-    let u = new Date().toLocaleDateString()
-    let arr = u.split('/')
-    let str = String(d);
-    let a = str.split('-');
-    let p = new Project(n, Number(this.padTo2Digits(arr[2]) + this.padTo2Digits(arr[1]) + this.padTo2Digits(arr[0])))
-    p.deadline = Number(a[0] + a[1] + a[2])
-    p.state = s;
-    p.deadlinedate = d;
-    this.projectser.addproject(p)
+        location.reload();
+      }
+    )
     this.closePopup();
   }
 
@@ -76,40 +95,28 @@ export class PorjectsComponent implements OnInit {
     this.displayStyle = "none";
   }
 
-  returnTask(): Number {
-    let t = 0;
-    for (const p of this.projects) {
-      for (const y of p.tasks) {
-        t += 1;
-      }
-    }
-    return t;
-  }
 
-  reformat(n): any {
-    return n > 9 ? "" + n : "0" + n;
-  }
-
-
+//model2
   displayStyle2 = "none";
 
   openPopup2(p) {
     this.blure = true;
-    this.selected = p;
+    this.SProj = p;
     this.displayStyle2 = "block";
 
   }
 
-  save2(n, d, s) {
-    let index = this.projects.indexOf(this.selected)
-    let str = String(d);
-    let a = str.split('-');
-    let y = this.selected
-    y.name = n;
-    y.deadline = Number(a[0] + a[1] + a[2])
-    y.state = s
-    y.deadlinedate = d;
-    this.projectser.projects[index] = y;
+  save2(n, d, s, c) {
+
+    let p = new Projectapi(n, s, d, '');
+    if(!c){
+      c=-1;
+    }
+    this.ProjectApi.updateProject(this.SProj.id, p, c).subscribe((res) => {
+
+        location.reload();
+      }
+    )
     this.closePopup2();
   }
 
@@ -118,93 +125,78 @@ export class PorjectsComponent implements OnInit {
     this.displayStyle2 = "none";
   }
 
-  deleteProject(p) {
-    this.projectser.deleteproject(p)
 
-  }
-
-  deleteTask(p, t) {
-    p.tasks.splice(p.tasks.indexOf(t), 1);
-  }
-
+//model3
   displayStyle3 = "none";
+  pindex;
 
-  openPopup3(p, t = null) {
+  openPopup3(p) {
     this.blure = true;
-    this.selectedProject = p;
-    if (t) {
-      this.selectedTask = t;
-    }
+    this.pindex = p
     this.displayStyle3 = "block";
 
   }
 
   save3() {
-    if (this.selectedTask) {
-      this.deleteTask(this.selectedProject, this.selectedTask)
-
-    } else {
-      this.deleteProject(this.selectedProject)
-    }
+    this.ProjectApi.deleteproject(this.pindex).subscribe((re) => {
+      location.reload()
+    })
 
     this.closePopup3();
-    this.selectedTask = null;
-    this.selectedProject = null
-
+    this.pindex = null
 
   }
 
   closePopup3() {
     this.blure = false;
     this.displayStyle3 = "none";
-    this.selectedTask = null;
-    this.selectedProject = null
+
 
   }
 
+//model4
 
   displayStyle4 = "none";
 
-  openPopup4(p, i) {
-    this.selectedindex = i
+  openPopup4(id) {
+    this.selectedProjectId = id;
     this.blure = true;
-    this.selectedProject = p;
     this.displayStyle4 = "block";
 
   }
 
-  save4(p) {
-    this.selectedProject.addTask(new task(p))
-    this.click[this.selectedindex] = true
+  save4(p, d, s) {
+    let t = new Taskapi(p, s)
+    this.tasksapi.addTask(this.selectedProjectId, t, d).subscribe((re) => {
+      location.reload()
+    })
     this.closePopup4();
-
-    this.selectedProject = null
-    this.selectedindex = null;
+    this.selectedProjectId = null;
   }
 
   closePopup4() {
     this.blure = false;
     this.displayStyle4 = "none";
-    this.selectedProject = null
-    this.selectedindex = null;
+    this.selectedProjectId = null;
   }
 
+//model5
   displayStyle5 = "none";
 
-  openPopup5(p, t) {
-    this.selectedTask = t
+  openPopup5(t) {
+
     this.blure = true;
-    this.selectedProject = p;
+    this.STask = t
     this.displayStyle5 = "block";
 
   }
 
-  save5(p) {
-
-    this.selectedProject.tasks[this.selectedTask].task=p
+  save5(p, d, s) {
+    let t = new Taskapi(p, s)
+    this.tasksapi.updatetask(this.STask.id, t, d).subscribe((re) => {
+      location.reload()
+    })
     this.closePopup5();
-
-
   }
 
   closePopup5() {
@@ -213,6 +205,35 @@ export class PorjectsComponent implements OnInit {
 
   }
 
+  deletetasskk(id) {
+    this.tasksapi.delete(id).subscribe((r) => {
+      location.reload()
+    })
+  }
 
+//model6
+  displayStyle6 = "none";
+
+  openPopup6(t) {
+
+    this.blure = true;
+    this.STask = t
+    this.displayStyle6 = "block";
+
+  }
+
+  save6(p, s) {
+    let t = new Taskapi(p, s)
+    this.tasksapi.updatetask(this.STask.id, t, -1).subscribe((re) => {
+      location.reload()
+    })
+    this.closePopup6();
+  }
+
+  closePopup6() {
+    this.blure = false;
+    this.displayStyle6 = "none";
+
+  }
 
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {LoginService} from "../login.service";
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {AuthService} from "../api/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -10,16 +10,30 @@ import {Router} from "@angular/router";
 export class LoginComponent implements OnInit {
 
   status;
-  constructor(private router: Router,private logged: LoginService) { }
+
+  constructor(private router: Router, private authService: AuthService) {
+  }
+
+  message;
 
   ngOnInit(): void {
-    this.logged.logout();
-    this.status=this.logged.logged;
+    this.authService.logout();
+    this.message = null;
   }
-  log(z ){
-    this.logged.loggin();
 
-    this.router.navigate(['dashboard']);
+  log(e, p) {
+
+    this.authService.login(e, p).subscribe(
+      (reponse) => {
+
+        localStorage.setItem('token', reponse.access_token);
+        sessionStorage.setItem('id', reponse.id);
+        this.router.navigate(['dashboard']);
+
+      },
+      (erreur) => this.message = 'Please Verify Your Credentials'
+    );
+
   }
 
 }

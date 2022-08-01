@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import {Project} from "./model/project";
 import {task} from "./model/task";
-
+import {HttpClient} from "@angular/common/http";
+const API="http://localhost:3000/project/"
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-  projects=[];
-  constructor() {
 
+  projects;
+  constructor(private http: HttpClient) {
 
   }
 
@@ -26,6 +27,9 @@ export class ProjectsService {
       return 0;
     });
   }
+
+
+
   addproject(p){
     this.projects.push(p)
     this.projects.sort((obj1, obj2) => {
@@ -40,6 +44,8 @@ export class ProjectsService {
       return 0;
     });
   }
+
+
   deleteproject(p){
     this.projects.splice(this.projects.indexOf(p),1)
   }

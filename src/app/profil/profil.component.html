@@ -5,7 +5,9 @@
       <div class="row">
         <div class="col-lg-4">
           <div class="user-photo m-b-30">
-            <img class="img-fluid rounded-circle  pull-right" [src]="'assets/img/avatar.jfif'" style="object-fit: cover;height: 200px;width: 200px" alt="">
+            <img *ngIf="cuser.gender=='male'" class="img-fluid rounded-circle  pull-right" [src]="'assets/img/avatar.jfif'" style="object-fit: cover;height: 200px;width: 200px" alt="">
+
+            <img *ngIf="cuser.gender=='female'" class="img-fluid rounded-circle  pull-right" [src]="'assets/img/female.jpg'" style="object-fit: cover;height: 200px;width: 200px" alt="">
 
           </div>
           <div>
@@ -13,8 +15,8 @@
           </div>
         </div>
         <div class="col-lg-8">
-          <div class="user-profile-name" > <h1 style="font-size: x-large">  <i class="bi bi-person"></i>{{user.name|titlecase}} {{user.firstname|titlecase}}</h1> </div>
-          <div class="user-job-title"><h2 style="color: #ec8404">{{user.job}}</h2>
+          <div class="user-profile-name" > <h1 style="font-size: x-large">  <i class="bi bi-person"></i> {{cuser.name}} {{cuser.firstname}}  </h1> </div>
+          <div class="user-job-title"><h2 style="color: #ec8404">{{cuser.job}}</h2>
           </div>
 
           <div class="custom-tab user-profile-tab">
@@ -25,20 +27,17 @@
 
                   <div class="birthday-content">
                     <span class="contact-title">Birthday:</span>
-                    <span class="birth-date">{{user.birthday|Dating}} </span>
+                    <span class="birth-date">{{cuser.birthday| date: 'dd/MM/yyyy'}} </span>
                   </div>
                   <div class="email-content">
                     <span class="contact-title">Email:</span>
-                    <span class="contact-email">{{user.email}}</span>
+                    <span class="contact-email">{{cuser.email}}</span>
                   </div>
                   <div class="phone-content">
                     <span class="contact-title">Phone:</span>
-                    <span class="phone-number">{{user.number}}</span>
+                    <span class="phone-number">{{cuser.phone}}</span>
                   </div>
-                  <div class="skype-content">
-                    <span class="contact-title">Skype:</span>
-                    <span class="contact-skype">{{user.skype}}</span>
-                  </div>
+
                   <div class="skype-content">
                     <button class="btn btn-secondary" (click)="openPopup()">  Edit Profile </button>                 </div>
                 </div>
@@ -63,7 +62,7 @@
   role="dialog"
 
   style="padding-bottom:100px"
-  [ngStyle]="{'display':displayStyle}">
+  [ngStyle]="{'display':displayStyle2}">
   <div class="modal-dialog" role="document"
        style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
     <div class="modal-content">
@@ -74,54 +73,93 @@
             <h1>
              Edit Profile </h1></div>
         </div>
-        <div class="row" style="padding-top: 20px;">
-          <div class="col"> Name:</div>
-          <div class="col"><input  type="text" class="form-control" #name style="height: 30px" [ngModel]="user.name"></div>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-        <div class="col"> FirstName:</div>
-          <div class="col"><input   type="text" class="form-control" #fn style="height: 30px" [ngModel]="user.firstname"></div>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-          <div class="col"> Job:</div>
-          <div class="col"><input  type="text" class="form-control" #job style="height: 30px" [ngModel]="user.job"></div>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-      <div class="col"> Email:</div>
-          <div class="col"><input  type="text" class="form-control" #email style="height: 30px" [ngModel]="user.email"></div>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-          <div class="col"> Phone Number:</div>
-          <div class="col"><input type="number" class="form-control" #num style="height: 30px" [ngModel]="user.number"></div>
-        </div>
+        <form >
+          <div class="modal-body px-4">
 
-        <div class="row" style="padding-top: 20px;">
-          <div class="col"> Birthday:</div>
-          <div class="col">
-            <input type="date" class="form-control" #bday style="height: 30px" [ngModel]="bd"></div>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-          <div class="col"> Skype:</div>
-          <div class="col"><input   type="text" class="form-control" #sk style="height: 30px" [ngModel]="user.skype"></div>
-        </div>
+
+            <div class="row mb-2">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label >Firstname</label>
+                  <input type="text" class="form-control" #firstname1 [value]="cuser.name"  >
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label >Lastname</label>
+                  <input type="text" class="form-control"   #name1 [value]="cuser.name"  >
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label >Username</label>
+                  <input type="text" class="form-control"   #username1 [value]="cuser.username" >
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label >Password</label>
+                  <input type="text" class="form-control"   #password1   >
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label >Email</label>
+                  <input type="email" class="form-control"   #email1  [value]="cuser.email">
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label  >Birthday</label>
+                  <input type="date" class="form-control"   #birthday1  [value]="cuser.birthday" >
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label  >Job</label>
+                  <input type="text" class="form-control"  #job1   [value]="cuser.job">
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label >Gender</label>
+
+                  <select class="form-select"  #Gender1  [value]="cuser.gender" >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group mb-4">
+                  <label >Phone</label>
+                  <input type="number" class="form-control"  #phone1  [value]="cuser.phone">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
 
 
         <div class="row" style="padding-top: 20px;">
           <div class="col" style="  display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-outline-dark" (click)="save(name.value,fn.value,job.value,email.value,num.value,bday.value,sk.value)"><i
+            <button class="btn btn-outline-dark" (click)="save2(username1.value, name1.value, firstname1.value, job1.value, email1.value, password1.value, birthday1.value,  '', phone1.value, Gender1.value)"><i
               class="fa fa-check"
               aria-hidden="true"></i> Save
             </button>
           </div>
           <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
             <button type="button" class="btn btn-outline-danger"
-                    (click)="closePopup()">
+                    (click)="closePopup2()">
               <i class="fa fa-times" aria-hidden="true"></i> Cancel
             </button>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>

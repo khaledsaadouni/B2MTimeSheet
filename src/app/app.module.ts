@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule } from  '@angular/common/http'
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavComponent } from './nav/nav.component';
@@ -11,9 +11,10 @@ import { ProfilComponent } from './profil/profil.component';
 import {ROUTING} from "./app.routing";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { DatePipe } from './date.pipe';
 import { LoginComponent } from './login/login.component';
+import { TeamComponent } from './team/team.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +25,8 @@ import { LoginComponent } from './login/login.component';
     CalendarComponent,
     ProfilComponent,
     DatePipe,
-    LoginComponent
+    LoginComponent,
+    TeamComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,9 @@ import { LoginComponent } from './login/login.component';
     DragDropModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

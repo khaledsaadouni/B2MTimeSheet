@@ -1,5 +1,4 @@
 <!--main-->
-
 <div class="card">
   <div [ngClass]="{'bluring': blure}">
     <div style="padding-top: 20px;padding-left: 20px;padding-right: 20px;  height: 100%    ">
@@ -8,53 +7,87 @@
           <div class="pull-left ">
             <h1>Projects</h1>
           </div>
-          <div class="pull-right row">
+          <div class="pull-right row"  >
             <div class="col" style="padding-top: 3px">
-              <button class="btn btn-outline-dark btn-sm pull-left" (click)="openPopup()">Add New Project</button>
+              <button class="btn btn-outline-dark btn-sm pull-left" (click)="openPopup()" *ngIf="cuser.role=='admin'||cuser.role=='manager'">Add New Project</button>
             </div>
           </div>
         </div>
-        <div>
+        <div *ngIf="cuser.role=='admin'||cuser.role=='manager'">
           <div (cdkDropListDropped)="drop($event)" cdkDropList class="">
-            <div *ngFor="let p of projects; index as i" [ngClass]="[random()]" cdkDrag class="example-box ">
+            <div *ngFor="let p of list; index as i"   cdkDrag class="example-box ">
               <div class="row">
                 <div class="col-sm-1"  style="width:5px;height: 100%"  >
                   <span [ngClass]="p.state" >  &nbsp;</span>
-
                 </div>
                 <div class=" col task-title" style="font-size: large;text-align: left">
                   <a class="btn btn-sm  " style="border: none" (click)="click[i]=!click[i]">
                     <i *ngIf="!click[i]" class="fa fa-angle-down" aria-hidden="true"></i>
                     <i *ngIf="click[i]" class="fa fa-angle-up" aria-hidden="true"></i></a>
-                  <span class="task-title-sp ">{{p.name}} <span class="badge " [ngClass]="p.state">{{p.state}}</span><span style="font-size: small;color: grey;padding-left: 10px" *ngIf="p.deadline">DL: {{p.deadline|Dating }} </span></span>
+                  <span class="task-title-sp ">{{p.name|titlecase}} <span class="badge " [ngClass]="p.state">{{p.state}}</span><span style="font-size: medium;color: darkgrey;padding-left: 10px" *ngIf="p.client" >{{p.client.name|titlecase}} </span></span>
                   <div class="pull-right hidden-phone">
-                    <button (click)="openPopup4(p,i)" class="btn btn-outline-dark btn-xsbi bi bi-plus"
+                    <span style="font-size: small;color: grey;padding-left: 10px" *ngIf="p.DL != '1899-11-30'">DL: {{p.DL | date: 'dd/MM/yyyy'}} </span>
+                    <button  (click)="openPopup4(p.id)" class="btn btn-outline-dark btn-xsbi bi bi-plus" *ngIf="cuser.role=='admin'||cuser.role=='manager'"
                             style=" margin-left: 10px;margin-right: 10px;border: none "></button>
-                    <button (click)="openPopup2(p)" class="btn btn-outline-dark btn-xs bi bi-pencil"
-                            style=" margin-left: 10px;margin-right: 10px;border: none"></button>
-                    <button (click)="openPopup3(p)" class="btn btn-outline-danger btn-xs bi bi-trash"
+                    <button   class="btn btn-outline-dark btn-xs bi bi-pencil" *ngIf="cuser.role=='admin'||cuser.role=='manager'"
+                            style=" margin-left: 10px;margin-right: 10px;border: none" (click)="openPopup2(p)"></button>
+                    <button (click)="openPopup3(p.id)"  class="btn btn-outline-danger btn-xs bi bi-trash" *ngIf="cuser.role=='admin'||cuser.role=='manager'"
                             style=" margin-left: 10px;margin-right: 10px;border: none"></button>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div *ngIf="click[i]">
-                  <div class="example-box" *ngFor="let t of p.tasks;index as w"> {{t.task}}
-
+              <div class="row" *ngIf="click[i]">
+                <div >
+                  <div class="example-box" *ngFor="let t of p.tasks;index as w">{{t.task|titlecase}} <span class="badge " [ngClass]="t.state">{{t.state}}</span>  <span *ngFor="let d of devs"> <span *ngFor="let ta of d.tasks"> <span *ngIf="ta.id==t.id" style="color: darkgrey;font-size: small"> | Assigned to: {{d.firstname|titlecase}} {{d.name|titlecase}}</span> </span> </span>
                     <div class="pull-right hidden-phone">
-                      <button (click)="openPopup5(p,w)" class="btn btn-outline-dark btn-xsbi bi bi-pencil"
+                      <button (click)="openPopup5(t)" class="btn btn-outline-dark btn-xsbi bi bi-pencil" *ngIf="cuser.role=='admin'||cuser.role=='manager'"
                               style=" margin-left: 10px;margin-right: 10px;border: none "></button>
-                      <button (click)="openPopup3(p,t)" class="btn btn-outline-danger btn-xs bi bi-trash"
+                      <button (click)="deletetasskk(t.id)" class="btn btn-outline-danger btn-xs bi bi-trash" *ngIf="cuser.role=='admin'||cuser.role=='manager'"
                               style=" margin-left: 10px;margin-right: 10px;border: none"></button>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!(cuser.role=='admin'||cuser.role=='manager')">
+          <div (cdkDropListDropped)="drop1($event)" cdkDropList class="">
+            <div *ngFor="let p of cuser.tasks; index as i"   cdkDrag class="example-box ">
+              <div class="row">
+                <div class="col-sm-1"  style="width:5px;height: 100%"  >
 
+                </div>
+                <div class=" col task-title" style="font-size: large;text-align: left">
+                  <span class="task-title-sp ">{{p.task|titlecase}}  <span class="badge " [ngClass]="p.state">{{p.state}}</span> </span>
+                  <div class="pull-right hidden-phone">
+                    <span style="font-size: small;color: grey;padding-left: 10px" *ngIf="p.DL">DL: {{p.DL | date: 'dd/MM/yyyy'}} </span>
+                    <button (click)="openPopup6(p)" class="btn btn-outline-dark btn-xsbi bi bi-pencil" *ngIf="!(cuser.role=='admin'||cuser.role=='manager')"
+                            style=" margin-left: 10px;margin-right: 10px;border: none "></button>
+                  </div>
+                </div>
               </div>
             </div>
 
           </div>
+
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       </section>
     </div>
@@ -63,6 +96,20 @@
 
 </div>
 <!--end main-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!--new project model-->
@@ -81,48 +128,63 @@
         <div class="row">
           <div class="col">
             <h1><i class="fa fa-file-o" aria-hidden="false"></i>
-              New project </h1></div>
+              New Project </h1></div>
         </div>
+        <form #projform="ngForm">
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Project Name:</div>
-          <div class="col"><input type="text" class="form-control" #name style="height: 30px"></div>
+          <div class="col"><input  ngModel required  type="text" name="name" class="form-control" #namep='ngModel' style="height: 30px"></div>
         </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Deadline:</div>
-          <div class="col"><input type="date" class="form-control" #date style="height: 30px"></div>
+          <div class="col"><input type="Date" name="DL" class="form-control" #date style="height: 30px"></div>
         </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Status:</div>
-          <div class="col"><select #satut class="form-select ">
-            <option value="Pending">Pending</option>
+          <div class="col">
+            <select #state='ngModel'   ngModel required  class="form-select " name="sate">
+            <option value="Pending"  >Pending</option>
             <option value="Ongoing">Ongoing</option>
             <option value="Done">Done</option>
             <option value="Canceled">Canceled</option>
           </select>
           </div>
         </div>
+            <div class="row" style="padding-top: 20px;">
+              <div class="col"> Client:</div>
+              <div class="col">
+            <select #client class="form-select " name="sate" >
+            <option  [value]="-1"> </option>
+            <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+
+          </select>
+          </div>
+        </div>
 
         <div class="row" style="padding-top: 20px;">
           <div class="col" style="  display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-outline-dark" (click)="save(name.value,date.value,satut.value)"><i
+            <button [disabled]="namep.invalid || state.invalid" class="btn btn-outline-dark" (click)="save(namep.value,date.value,state.value,client.value)"><i
               class="fa fa-check"
               aria-hidden="true"></i> Save
             </button>
           </div>
           <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
-            <button type="button" class="btn btn-outline-danger"
+            <button  type="button" class="btn btn-outline-danger"
                     (click)="closePopup()">
               <i class="fa fa-times" aria-hidden="true"></i> Cancel
             </button>
           </div>
         </div>
-
+        </form>
 
       </div>
     </div>
   </div>
 </div>
+
 <!--end new project model-->
+
+
 
 <!--edit model-->
 <div
@@ -140,21 +202,21 @@
         <div class="row">
           <div class="col">
             <h1><i class="fa fa-file-o" aria-hidden="false"></i>
-              New project </h1></div>
+              Edit Project </h1></div>
         </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Project Name:</div>
-          <div class="col"><input type="text" class="form-control" #name12 style="height: 30px" [ngModel]="selected.name">
+          <div class="col"><input type="text" class="form-control" #name12 style="height: 30px" [ngModel]="SProj.name">
           </div>
         </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Deadline:</div>
           <div class="col"><input type="date" class="form-control" #date12 style="height: 30px"
-                                  [ngModel]="selected.deadlinedate"></div>
+                          [ngModel]="SProj.DL"         ></div>
         </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col"> Status:</div>
-          <div class="col"><select #satut12 class="form-select " [ngModel]="selected.state">
+          <div class="col"><select #satut12 class="form-select "  [ngModel]="SProj.state">
             <option value="Pending">Pending</option>
             <option value="Ongoing">Ongoing</option>
             <option value="Done">Done</option>
@@ -162,10 +224,19 @@
           </select>
           </div>
         </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="col"> Client:</div>
+          <div class="col">
+            <select #clientEd class="form-select " name="sate"  [ngModel]="SProj.client.id">
 
+              <option *ngFor="let cb of clients" [value]="cb.id">{{cb.name|titlecase}}</option>
+
+            </select>
+          </div>
+        </div>
         <div class="row" style="padding-top: 20px;">
           <div class="col" style="  display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-outline-dark" (click)="save2(name12.value,date12.value,satut12.value)"><i
+            <button class="btn btn-outline-dark" (click)="save2(name12.value,date12.value,satut12.value, clientEd.value)"><i
               class="fa fa-check"
               aria-hidden="true"></i> Save
             </button>
@@ -247,14 +318,33 @@
         <div class="row" style="padding-top: 5px;padding-bottom: 10px">
           <div class="col">Task Name:</div>
           <div class="col"><input type="text" class="form-control" #task style="height: 30px"></div>
+        </div><div class="row" style="padding-top: 5px;padding-bottom: 10px">
+          <div class="col">Status:</div>
+        <div class="col">
+          <select #statet class="form-select " name="sate">
+            <option value="Pending">Pending</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Done">Done</option>
+            <option value="Canceled">Canceled</option>
+          </select>
+        </div>
+        </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px">
+          <div class="col">Assign Task To:</div>
+          <div class="col"><select #dev class="form-select " name="sate"   >
+            <option value="-1"> </option>
+            <option *ngFor="let cb of devs" [value]="cb.id">{{cb.name}}</option>
+
+          </select></div>
         </div>
 
         <div class="row" style="padding-top: 10px;">
           <div class="col" style="  display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-outline-dark" (click)="save4(task.value)"><i class="fa fa-check"
+            <button class="btn btn-outline-dark" (click)="save4(task.value,dev.value,statet.value)"><i class="fa fa-check"
                                                                                 aria-hidden="true"></i>Save
             </button>
           </div>
+
           <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
             <button type="button" class="btn btn-outline-danger"
                     (click)="closePopup4()">
@@ -287,17 +377,35 @@
         <div class="row">
           <div class="col">
             <h1><i class="bi bi-list-stars"></i>
-              New Task </h1></div>
+              Edit Task </h1></div>
+        </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px" >
+          <div class="col">Task Name:</div>
+          <div class="col"><input  type="text" class="form-control"  #task1234 style="height: 30px" [ngModel]="STask.task"></div>
         </div>
         <div class="row" style="padding-top: 5px;padding-bottom: 10px">
-          <div class="col">Task Name:</div>
-          <div class="col"><input type="text" class="form-control"  #task1234 style="height: 30px"></div>
+          <div class="col">Status:</div>
+          <div class="col">
+            <select   #statet2 class="form-select " name="sate" [ngModel]="STask.state">
+              <option value="Pending">Pending</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Done">Done</option>
+              <option value="Canceled">Canceled</option>
+            </select>
+          </div>
         </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px"  >
+          <div class="col">Assign Task To:</div>
+          <div class="col"><select required #dev2 class="form-select " name="sate"   >
+            <option value="-1"> </option>
+            <option *ngFor="let cb of devs" [value]="cb.id">{{cb.name|titlecase}}</option>
 
-        <div class="row" style="padding-top: 10px;">
+          </select></div>
+        </div>
+        <div class="row" style="padding-top: 10px;" >
           <div class="col" style="  display: flex; justify-content: center; align-items: center;">
-            <button class="btn btn-outline-dark" (click)="save5(task1234.value)"><i class="fa fa-check"
-                                                                                aria-hidden="true"></i>Save
+            <button  class="btn btn-outline-dark" (click)="save5(task1234.value,dev2.value,statet2.value)"><i class="fa fa-check"
+                                                                                    aria-hidden="true"></i>Save
             </button>
           </div>
           <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
@@ -316,4 +424,54 @@
 <!--end edit task model-->
 
 
+<!--edit task model-->
+<div
+  class="pop"
+  tabindex="-1"
+  role="dialog"
+
+  style="padding-bottom: 200px"
+  [ngStyle]="{'display':displayStyle6}">
+  <div class="modal-dialog" role="document"
+       style=" box-shadow: 0  15px 20px 0  rgba(0, 0, 0, 0.5); border-radius: 1rem">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <h1><i class="bi bi-list-stars"></i>
+              Edit Task </h1></div>
+        </div>
+        <div class="row" style="padding-top: 5px;padding-bottom: 10px">
+          <div class="col">Status:</div>
+          <div class="col">
+            <select   #stateta class="form-select " name="sate" [ngModel]="STask.state">
+              <option value="Pending">Pending</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Done">Done</option>
+              <option value="Canceled">Canceled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" style="padding-top: 10px;" >
+          <div class="col" style="  display: flex; justify-content: center; align-items: center;">
+            <button  class="btn btn-outline-dark" (click)="save6(STask.name,stateta.value)"><i class="fa fa-check"  *ngIf="!(cuser.role=='dev')"
+                                                                                    aria-hidden="true"></i>Save
+            </button>
+          </div>
+          <div class="col" style="  display: flex;  justify-content: center;align-items: center;">
+            <button type="button" class="btn btn-outline-danger"
+                    (click)="closePopup6()">
+              <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--end edit task model-->
 

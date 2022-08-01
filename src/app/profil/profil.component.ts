@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {PersonsService} from "../persons.service";
-import {Project} from "../model/project";
 import {LoginService} from "../login.service";
+import {AuthService} from "../api/auth.service";
+import {Router} from "@angular/router";
+import {Userapi} from "../model/userapi";
 
 @Component({
   selector: 'app-profil',
@@ -11,39 +13,40 @@ import {LoginService} from "../login.service";
 export class ProfilComponent implements OnInit {
 
   user;
+  cuser;
   bd;
-  constructor(private personservice:PersonsService,private logged: LoginService) { }
+  constructor(private authservice: AuthService,private router: Router,private personservice:PersonsService,private logged: LoginService, public authService: AuthService) { }
 
   ngOnInit(): void {
+
+    this.authService.getLoggedUser(sessionStorage.getItem('id')).subscribe((res) => {
+      this.cuser = res
+    })
     this.logged.loggin();
   this.user=this.personservice.user
   this.bd=this.user.birthday.slice(0,4)+'-'+this.user.birthday.slice(4,6)+'-'+this.user.birthday.slice(6)
 
   }
   blure = false;
-  displayStyle = "none";
+  displayStyle2 = "none";
 
   openPopup() {
     this.blure = true;
-    this.displayStyle = "block";
+    this.displayStyle2 = "block";
 
   }
 
 
-  save( name,fn,job,email,num,bday,sk) {
-    this.user.name=name
-    this.user.firstname=fn
-    this.user.job=job
-    this.user.email=email
-    this.user.number=num
-    this.user.birthday=bday.slice(0,4)+bday.slice(5,7)+bday.slice(8)
-    this.user.skype=sk;
-    this.closePopup();
+  save2(username , name , firstname , job , email , password , birthday , role, phone , Gender ) {
+
+    let u=new Userapi(username , name , firstname , job , email , password , birthday , role, phone , Gender)
+    this.authservice.update(this.cuser.id,u).subscribe((e)=>{location.reload()})
+    this.closePopup2();
   }
 
-  closePopup() {
+  closePopup2() {
     this.blure = false;
-    this.displayStyle = "none";
+    this.displayStyle2 = "none";
   }
 
 }

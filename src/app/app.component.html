@@ -1,13 +1,12 @@
-<div class="pace-done" [ngClass]="{'sidebar-hide': side}">
-  <app-nav *ngIf=" logged.logged"  (send_enable)="get_side($event)"  ></app-nav>
-  <div  [ngClass]="{'enabled': side ,'disabled':!side}">
+<div class="pace-done" [ngClass]="{'sidebar-hide': side}" style="background: #f5f5f5">
+  <app-nav  *ngIf="authService.isAutheticated()" (send_enable)="get_side($event)"  ></app-nav>
+  <div  [ngClass]="{'enabled': side ,'disabled':!side}"  >
     <div class="content-wrap"  >
-      <div class="main">
+      <div class="main" >
 
-    <router-outlet></router-outlet>
+        <router-outlet></router-outlet>
       </div>
     </div>
 
   </div>
 </div>
-

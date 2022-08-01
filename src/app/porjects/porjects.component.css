@@ -100,3 +100,6 @@
   to {top: 0px;}
 }
 
+.ng-touched.ng-invalid{
+  border-color: red;
+}

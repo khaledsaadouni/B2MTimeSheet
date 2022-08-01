@@ -1,7 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {PersonsService} from "../persons.service";
-import {LoginService} from "../login.service";
 import {Router} from "@angular/router";
+import {AuthService} from "../api/auth.service";
+import {ProjService} from "../api/projects.service";
 
 @Component({
   selector: 'app-nav',
@@ -11,22 +12,32 @@ import {Router} from "@angular/router";
 export class NavComponent implements OnInit {
 
 
-  user
-  hide_side=true;
-  @Output() send_enable=new EventEmitter;
-  constructor(private personservice:PersonsService,private router: Router,private logged: LoginService) { }
+  projects;
+  user;
+  hide_side = true;
+  @Output() send_enable = new EventEmitter;
+
+  constructor(private personservice: PersonsService,  private ProjectApi: ProjService, private router: Router, public authService: AuthService) {
+  }
 
   ngOnInit(): void {
+    this.ProjectApi.getProjects().subscribe((res) => {
+      this.projects = res
+    })
 
-    this.user=this.personservice.user
+    this.authService.getLoggedUser(sessionStorage.getItem('id')).subscribe((res) => {
+      this.user = res
+    })
+
   }
 
-  hide_sidebar(){
-    this.hide_side=!this.hide_side;
+  hide_sidebar() {
+    this.hide_side = !this.hide_side;
     this.send_enable.emit(this.hide_side)
   }
-  logout(){
-    this.logged.logout();
-    this.router.navigate(['']);
+
+  logout() {
+
+    this.authService.logout();
   }
 }
